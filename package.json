@@ -22,7 +22,7 @@
 		"test": "jest",
 		"test:watch": "jest --watchAll",
 		"prepublishOnly": "npm run build && npm test",
-		"publish": "npm run build && npm publish"
+		"npm:publish": "npm run build && npm publish"
 	},
 	"keywords": [
 		"animation",
@@ -55,5 +55,8 @@
 		"ts-jest": "^29.0.0",
 		"tslib": "^2.8.1",
 		"typescript": "^5.0.0"
+	},
+	"dependencies": {
+		"@ismael1361/utils": "^1.0.0"
 	}
 }

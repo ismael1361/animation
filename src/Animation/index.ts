@@ -1,3 +1,7 @@
+import animation from "./Animation";
+
 export * from "./Easing";
-export * as AnimationType from "./Types";
-export * as Animation from "./Animation";
+export * from "./Types";
+export * from "./Animation";
+
+export default animation;

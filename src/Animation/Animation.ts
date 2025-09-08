@@ -3,32 +3,32 @@ import { Easing } from "./Easing";
 import { SharedValue, sharedValues } from "../SharedValue";
 
 export const requestAnimation = (callback: FrameRequestCallback): number => {
-    try {
-        return requestAnimationFrame(callback);
-    } catch {}
+	try {
+		return requestAnimationFrame(callback);
+	} catch {}
 
-    return setTimeout(callback, 16);
+	return setTimeout(callback, 16);
 };
 
 export const cancelAnimation = (id: number): void => {
-    try {
-        cancelAnimationFrame(id);
-    } catch {}
+	try {
+		cancelAnimationFrame(id);
+	} catch {}
 
-    clearTimeout(id);
+	clearTimeout(id);
 };
 
 const materializeGenerator = (input: Input) => {
-    "worklet";
-    return typeof input === "function" ? input() : input;
+	"worklet";
+	return typeof input === "function" ? input() : input;
 };
 
 const defaultTimingConfig: Required<TimingConfig> = {
-    from: 0,
-    to: 1,
-    easing: Easing.linear,
-    delay: 0,
-    duration: 600,
+	from: 0,
+	to: 1,
+	easing: Easing.linear,
+	delay: 0,
+	duration: 600,
 };
 
 /**
@@ -40,15 +40,15 @@ const defaultTimingConfig: Required<TimingConfig> = {
  * ```ts
  * // Exemplo de uso dentro de uma animação customizada:
  * function* myCustomAnimation() {
- *   const deltaTime = yield* Animation.timeSincePreviousFrame();
+ *   const deltaTime = yield* timeSincePreviousFrame();
  *   console.log(`O último quadro demorou ${deltaTime}ms para renderizar.`);
  * }
  * ```
  */
 export function* timeSincePreviousFrame(): InputGenerator<number> {
-    "worklet";
-    const { deltaTime } = yield;
-    return deltaTime;
+	"worklet";
+	const { deltaTime } = yield;
+	return deltaTime;
 }
 
 /**
@@ -63,7 +63,7 @@ export function* timeSincePreviousFrame(): InputGenerator<number> {
  * const opacity = new SharedValue(0);
  *
  * // Usando SharedValue diretamente
- * yield* Animation.timing(opacity, { to: 1, duration: 500 });
+ * yield* timing(opacity, { to: 1, duration: 500 });
  *
  * // Usando uma função de retorno de chamada
  * yield* timing((val) => {
@@ -74,31 +74,31 @@ export function* timeSincePreviousFrame(): InputGenerator<number> {
  * ```
  */
 export function* timing(value: SharedValue<number> | TimingCallback, config: TimingConfig = defaultTimingConfig): InputGenerator {
-    "worklet";
-    if (value instanceof SharedValue) {
-        config.from = value.value;
-    }
+	"worklet";
+	if (value instanceof SharedValue) {
+		config.from = value.value;
+	}
 
-    const { from = 0, to, easing, delay, duration } = { ...defaultTimingConfig, ...config };
+	const { from = 0, to, easing, delay, duration } = { ...defaultTimingConfig, ...config };
 
-    yield* wait(delay);
-    const start: number = (yield).deltaTime;
-    const end = start + duration;
-    let cancel: boolean = false;
+	yield* wait(delay);
+	const start: number = (yield).deltaTime;
+	const end = start + duration;
+	let cancel: boolean = false;
 
-    for (let current = start; current < end; ) {
-        const progress = easing((current - start) / duration);
-        const val = from + (to - from) * progress;
+	for (let current = start; current < end; ) {
+		const progress = easing((current - start) / duration);
+		const val = from + (to - from) * progress;
 
-        if (value instanceof SharedValue) value.value = val;
-        if (value instanceof Function) cancel = value(val) || cancel;
+		if (value instanceof SharedValue) value.value = val;
+		if (value instanceof Function) cancel = value(val) || cancel;
 
-        if (!cancel) current += yield* timeSincePreviousFrame();
-        if (cancel) break;
-    }
+		if (!cancel) current += yield* timeSincePreviousFrame();
+		if (cancel) break;
+	}
 
-    if (value instanceof SharedValue) value.value = to;
-    if (value instanceof Function) value(to);
+	if (value instanceof SharedValue) value.value = to;
+	if (value instanceof Function) value(to);
 }
 
 /**
@@ -109,17 +109,17 @@ export function* timing(value: SharedValue<number> | TimingCallback, config: Tim
  * @example
  * ```ts
  * console.log("Início da pausa.");
- * yield* Animation.wait(1000); // Espera por 1 segundo.
+ * yield* wait(1000); // Espera por 1 segundo.
  * console.log("Fim da pausa.");
  * ```
  */
 export function* wait(duration = 1000): InputGenerator {
-    "worklet";
-    const from: number = (yield).deltaTime;
-    const to = from + duration;
-    for (let current = from; current < to; ) {
-        current += yield* timeSincePreviousFrame();
-    }
+	"worklet";
+	const from: number = (yield).deltaTime;
+	const to = from + duration;
+	for (let current = from; current < to; ) {
+		current += yield* timeSincePreviousFrame();
+	}
 }
 
 /**
@@ -134,21 +134,21 @@ export function* wait(duration = 1000): InputGenerator {
  * // Em outro lugar do código, isReady.value será definido como true.
  *
  * // Espera até isReady.value se tornar true
- * yield* Animation.waitUntil(isReady);
+ * yield* waitUntil(isReady);
  * console.log("A condição foi atendida!");
  *
  * // Exemplo com 'invert'
  * const isVisible = new SharedValue(true);
  * // Espera até isVisible.value se tornar false
- * yield* Animation.waitUntil(isVisible, true);
+ * yield* waitUntil(isVisible, true);
  * console.log("O elemento não está mais visível.");
  * ```
  */
 export function* waitUntil(value: SharedValue<boolean>, invert = false): InputGenerator {
-    "worklet";
-    while (invert ? value.value : !value.value) {
-        yield;
-    }
+	"worklet";
+	while (invert ? value.value : !value.value) {
+		yield;
+	}
 }
 
 /**
@@ -162,17 +162,17 @@ export function* waitUntil(value: SharedValue<boolean>, invert = false): InputGe
  * @example
  * ```ts
  * // Apenas espera por 500ms
- * yield* Animation.delay(500);
+ * yield* delay(500);
  *
  * // Espera 1 segundo e depois inicia uma animação de opacidade.
  * const opacity = new SharedValue(0);
- * yield* Animation.delay(1000, () => timing(opacity, { to: 1 }));
+ * yield* delay(1000, () => timing(opacity, { to: 1 }));
  * ```
  */
 export function* delay(duration: number = 1000, animation?: Input): InputGenerator {
-    "worklet";
-    yield* wait(duration);
-    if (animation) yield* materializeGenerator(animation);
+	"worklet";
+	yield* wait(duration);
+	if (animation) yield* materializeGenerator(animation);
 }
 
 /**
@@ -186,29 +186,29 @@ export function* delay(duration: number = 1000, animation?: Input): InputGenerat
  * const opacity = new SharedValue(0);
  * const scale = new SharedValue(0.5);
  *
- * yield* Animation.parallel(
- *   () => Animation.timing(opacity, { to: 1, duration: 1000 }),
- *   () => Animation.timing(scale, { to: 1, duration: 1000 })
+ * yield* parallel(
+ *   () => timing(opacity, { to: 1, duration: 1000 }),
+ *   () => timing(scale, { to: 1, duration: 1000 })
  * );
  * // Ambas as animações de opacidade e escala ocorrerão simultaneamente.
  * ```
  */
 export function* parallel(...animations: Inputs): InputGenerator {
-    "worklet";
-    const iterators = animations.map((input) => materializeGenerator(input));
-    let isDone = false;
-    let timeSinceFirstFrame = 0;
-    while (!isDone) {
-        const done = [];
-        for (const iterator of iterators) {
-            const val = iterator.next({ ...(yield), deltaTime: timeSinceFirstFrame } as any);
-            done.push(val.done);
-        }
-        isDone = done.every((d) => d);
-        if (!isDone) {
-            timeSinceFirstFrame = (yield).deltaTime;
-        }
-    }
+	"worklet";
+	const iterators = animations.map((input) => materializeGenerator(input));
+	let isDone = false;
+	let timeSinceFirstFrame = 0;
+	while (!isDone) {
+		const done = [];
+		for (const iterator of iterators) {
+			const val = iterator.next({ ...(yield), deltaTime: timeSinceFirstFrame } as any);
+			done.push(val.done);
+		}
+		isDone = done.every((d) => d);
+		if (!isDone) {
+			timeSinceFirstFrame = (yield).deltaTime;
+		}
+	}
 }
 
 /**
@@ -223,15 +223,15 @@ export function* parallel(...animations: Inputs): InputGenerator {
  * const opacity = new SharedValue(0);
  * const scale = new SharedValue(0.5);
  *
- * yield* Animation.all(
- *   () => Animation.timing(opacity, { to: 1, duration: 1000 }),
- *   () => Animation.timing(scale, { to: 1, duration: 1000 })
+ * yield* all(
+ *   () => timing(opacity, { to: 1, duration: 1000 }),
+ *   () => timing(scale, { to: 1, duration: 1000 })
  * );
  * ```
  */
 export function* all(...animations: Inputs): InputGenerator {
-    "worklet";
-    yield* parallel(...animations);
+	"worklet";
+	yield* parallel(...animations);
 }
 
 /**
@@ -245,9 +245,9 @@ export function* all(...animations: Inputs): InputGenerator {
  * // Espera por um clique do usuário ou por um timeout de 5 segundos, o que ocorrer primeiro.
  * const hasClicked = new SharedValue(false);
  *
- * yield* Animation.any(
- *   () => Animation.waitUntil(hasClicked),
- *   () => Animation.wait(5000)
+ * yield* any(
+ *   () => waitUntil(hasClicked),
+ *   () => wait(5000)
  * );
  *
  * if (hasClicked.value) {
@@ -258,20 +258,20 @@ export function* all(...animations: Inputs): InputGenerator {
  * ```
  */
 export function* any(...animations: Inputs): InputGenerator {
-    "worklet";
-    const iterators = animations.map((input) => materializeGenerator(input));
-    let isDone = false;
-    let timeSinceFirstFrame = 0;
-    while (!isDone) {
-        for (const iterator of iterators) {
-            const val = iterator.next({ ...(yield), deltaTime: timeSinceFirstFrame } as any);
-            isDone = val.done || isDone;
-            if (isDone) break;
-        }
-        if (!isDone) {
-            timeSinceFirstFrame = (yield).deltaTime;
-        }
-    }
+	"worklet";
+	const iterators = animations.map((input) => materializeGenerator(input));
+	let isDone = false;
+	let timeSinceFirstFrame = 0;
+	while (!isDone) {
+		for (const iterator of iterators) {
+			const val = iterator.next({ ...(yield), deltaTime: timeSinceFirstFrame } as any);
+			isDone = val.done || isDone;
+			if (isDone) break;
+		}
+		if (!isDone) {
+			timeSinceFirstFrame = (yield).deltaTime;
+		}
+	}
 }
 
 /**
@@ -285,18 +285,18 @@ export function* any(...animations: Inputs): InputGenerator {
  * const scale = new SharedValue(0.5);
  *
  * // Primeiro, anima a opacidade. Quando terminar, anima a escala.
- * yield* Animation.chain(
- *   () => Animation.timing(opacity, { to: 1, duration: 500 }),
- *   () => Animation.timing(scale, { to: 1, duration: 500 })
+ * yield* chain(
+ *   () => timing(opacity, { to: 1, duration: 500 }),
+ *   () => timing(scale, { to: 1, duration: 500 })
  * );
  * ```
  */
 export function* chain(...animations: Inputs): InputGenerator {
-    "worklet";
-    const iterators = animations.map((input) => materializeGenerator(input));
-    for (const iterator of iterators) {
-        yield* iterator;
-    }
+	"worklet";
+	const iterators = animations.map((input) => materializeGenerator(input));
+	for (const iterator of iterators) {
+		yield* iterator;
+	}
 }
 
 /**
@@ -311,22 +311,22 @@ export function* chain(...animations: Inputs): InputGenerator {
  * const opacity2 = new SharedValue(0);
  *
  * // A segunda animação começará 200ms após o início da primeira.
- * yield* Animation.stagger(200,
- *   () => Animation.timing(opacity1, { to: 1, duration: 500 }),
- *   () => Animation.timing(opacity2, { to: 1, duration: 500 })
+ * yield* stagger(200,
+ *   () => timing(opacity1, { to: 1, duration: 500 }),
+ *   () => timing(opacity2, { to: 1, duration: 500 })
  * );
  * ```
  */
 export function* stagger(delayMs: number, ...animations: Inputs): InputGenerator {
-    "worklet";
-    const iterators = animations.map<InputGenerator>((input, index) => {
-        return (function* () {
-            yield* wait(delayMs * index);
-            yield* materializeGenerator(input);
-        })();
-    });
+	"worklet";
+	const iterators = animations.map<InputGenerator>((input, index) => {
+		return (function* () {
+			yield* wait(delayMs * index);
+			yield* materializeGenerator(input);
+		})();
+	});
 
-    yield* parallel(...iterators);
+	yield* parallel(...iterators);
 }
 
 /**
@@ -341,19 +341,19 @@ export function* stagger(delayMs: number, ...animations: Inputs): InputGenerator
  * const value = new SharedValue(0);
  *
  * // Anima para 1, espera 200ms, depois anima de volta para 0.
- * yield* Animation.sequence(200,
- *   () => Animation.timing(value, { to: 1, duration: 500 }),
- *   () => Animation.timing(value, { to: 0, duration: 500 })
+ * yield* sequence(200,
+ *   () => timing(value, { to: 1, duration: 500 }),
+ *   () => timing(value, { to: 0, duration: 500 })
  * );
  * ```
  */
 export function* sequence(delayMs: number, ...animations: Inputs): InputGenerator {
-    "worklet";
-    const iterators = animations.map((input) => materializeGenerator(input));
-    for (let i = 0; i < iterators.length; i++) {
-        yield* iterators[i];
-        if (i < iterators.length - 1) yield* wait(delayMs);
-    }
+	"worklet";
+	const iterators = animations.map((input) => materializeGenerator(input));
+	for (let i = 0; i < iterators.length; i++) {
+		yield* iterators[i];
+		if (i < iterators.length - 1) yield* wait(delayMs);
+	}
 }
 
 /**
@@ -373,22 +373,22 @@ export function* sequence(delayMs: number, ...animations: Inputs): InputGenerato
  * const rotation = new SharedValue(0);
  *
  * // Gira um elemento 3 vezes
- * yield* Animation.loop(3, () => Animation.timing(rotation, { to: 360, duration: 1000 }));
+ * yield* loop(3, () => timing(rotation, { to: 360, duration: 1000 }));
  *
  * // Anima a opacidade para cima e para baixo infinitamente
  * const opacity = new SharedValue(0);
- * yield* Animation.loop(() => chain(
- *   () => Animation.timing(opacity, { to: 1, duration: 500 }),
- *   () => Animation.timing(opacity, { to: 0, duration: 500 })
+ * yield* loop(() => chain(
+ *   () => timing(opacity, { to: 1, duration: 500 }),
+ *   () => timing(opacity, { to: 0, duration: 500 })
  * ));
  * ```
  */
 export function* loop(...args: [factory: LoopCallback] | [iterations: number, factory: LoopCallback]): InputGenerator {
-    "worklet";
-    const [iterations, factory] = args.length === 1 ? [Infinity, args[0]] : args;
-    for (let i = 0; i < iterations; i++) {
-        yield* factory(i);
-    }
+	"worklet";
+	const [iterations, factory] = args.length === 1 ? [Infinity, args[0]] : args;
+	for (let i = 0; i < iterations; i++) {
+		yield* factory(i);
+	}
 }
 
 /**
@@ -413,16 +413,16 @@ export function* loop(...args: [factory: LoopCallback] | [iterations: number, fa
  *
  * // 2. Crie a animação usando a função `create`.
  * // A função geradora recebe o estado como `SharedValue`s.
- * const { state, start, pause } = Animation.create(function* (state) {
+ * const { state, start, pause } = create(function* (state) {
  *   console.log("Animação iniciada!");
  *
  *   // Anima o valor 'progress' de 0 para 1 em 1 segundo.
- *   yield* Animation.timing(state.progress, { to: 1, duration: 1000 });
+ *   yield* timing(state.progress, { to: 1, duration: 1000 });
  *
- *   yield* Animation.wait(500); // Pausa por 500ms.
+ *   yield* wait(500); // Pausa por 500ms.
  *
  *   // Anima de volta para 0.
- *   yield* Animation.timing(state.progress, { to: 0, duration: 1000 });
+ *   yield* timing(state.progress, { to: 0, duration: 1000 });
  *
  *   console.log("Animação concluída!");
  * });
@@ -439,102 +439,104 @@ export function* loop(...args: [factory: LoopCallback] | [iterations: number, fa
  * ```
  */
 export const create = <S extends AnimationState = {}>(animation: AnimationFn<S>, state: S = {} as S): AnimationProps<S> => {
-    let gen: null | InputGenerator = null;
-    const values = sharedValues<S>(state);
+	let gen: null | InputGenerator = null;
+	const values = sharedValues<S>(state);
 
-    let lastTime: number = Date.now();
-    let raf: number | null = null;
+	let lastTime: number = Date.now();
+	let raf: number | null = null;
 
-    let clearFunctions: Array<() => void> = [];
+	let clearFunctions: Array<() => void> = [];
 
-    let isPaused: boolean = false;
+	let isPaused: boolean = false;
 
-    function loop() {
-        if (!gen) {
-            gen = animation.call(null, values.current);
-        }
+	function loop() {
+		if (!gen) {
+			gen = animation.call(null, values.current);
+		}
 
-        let delta = Date.now() - lastTime;
-        lastTime = Date.now();
+		let delta = Date.now() - lastTime;
+		lastTime = Date.now();
 
-        if (!isPaused) {
-            try {
-                const res = gen!.next({
-                    deltaTime: delta,
-                    onClear(callback) {
-                        clearFunctions.unshift(callback);
-                    },
-                });
+		if (!isPaused) {
+			try {
+				const res = gen!.next({
+					deltaTime: delta,
+					onClear(callback) {
+						clearFunctions.unshift(callback);
+					},
+				});
 
-                if (res && (res as IteratorResult<any, any>).done) {
-                    // animação terminou: limpa para permitir reiniciar
-                    gen = null;
-                }
-            } catch (err) {
-                console.error("Animation generator threw", err);
-                gen = null;
-            }
+				if (res && (res as IteratorResult<any, any>).done) {
+					// animação terminou: limpa para permitir reiniciar
+					gen = null;
+				}
+			} catch (err) {
+				console.error("Animation generator threw", err);
+				gen = null;
+			}
 
-            if (gen) {
-                raf = requestAnimation(loop);
-            } else {
-                isPaused = true;
-            }
-        }
-    }
+			if (gen) {
+				raf = requestAnimation(loop);
+			} else {
+				isPaused = true;
+			}
+		}
+	}
 
-    function paused(paused: boolean) {
-        isPaused = paused;
-        if (!paused) {
-            lastTime = Date.now();
-            raf = requestAnimation(loop);
-        } else if (raf) {
-            cancelAnimation(raf);
-        }
-    }
+	function paused(paused: boolean) {
+		isPaused = paused;
+		if (!paused) {
+			lastTime = Date.now();
+			raf = requestAnimation(loop);
+		} else if (raf) {
+			cancelAnimation(raf);
+		}
+	}
 
-    return {
-        state: values.current,
-        start() {
-            if (raf) cancelAnimation(raf);
-            gen = null;
-            lastTime = Date.now();
+	return {
+		state: values.current,
+		start() {
+			if (raf) cancelAnimation(raf);
+			gen = null;
+			lastTime = Date.now();
 
-            values.clear();
-            gen = null;
-            lastTime = Date.now();
+			values.clear();
+			gen = null;
+			lastTime = Date.now();
 
-            raf = requestAnimation(loop);
-        },
+			raf = requestAnimation(loop);
+		},
 
-        clear() {
-            values.clear();
-            clearFunctions.forEach((f) => f());
-            clearFunctions = [];
-        },
+		clear() {
+			values.clear();
+			clearFunctions.forEach((f) => f());
+			clearFunctions = [];
+		},
 
-        pause() {
-            paused(true);
-        },
+		pause() {
+			paused(true);
+		},
 
-        resume() {
-            paused(false);
-        },
+		resume() {
+			paused(false);
+		},
 
-        play() {
-            this.resume();
-        },
+		play() {
+			this.resume();
+		},
 
-        stop() {
-            this.clear();
-            gen = null;
-            lastTime = Date.now();
-            this.pause();
-        },
+		stop() {
+			this.clear();
+			gen = null;
+			lastTime = Date.now();
+			this.pause();
+		},
 
-        restart() {
-            this.stop();
-            this.resume();
-        },
-    };
+		restart() {
+			this.stop();
+			this.resume();
+		},
+	};
 };
+
+export default create;

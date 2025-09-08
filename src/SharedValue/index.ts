@@ -1,4 +1,4 @@
-import { EventEmitter } from "../EventEmitter";
+import { EventEmitter } from "@ismael1361/utils";
 
 /**
  * Uma classe que encapsula um valor, permitindo que ele seja "observável" e reativo.
@@ -27,46 +27,46 @@ import { EventEmitter } from "../EventEmitter";
  * ```
  */
 export class SharedValue<T = unknown> extends EventEmitter<{
-    change: [T];
-    value: [T];
+	change: [T];
+	value: [T];
 }> {
-    private _initialValue: T;
-    private _value: T;
-    /**
-     * @param {T} value O valor inicial a ser encapsulado.
-     */
-    constructor(value: T) {
-        super();
-        this._initialValue = value;
-        this._value = value;
-    }
+	private _initialValue: T;
+	private _value: T;
+	/**
+	 * @param {T} value O valor inicial a ser encapsulado.
+	 */
+	constructor(value: T) {
+		super();
+		this._initialValue = value;
+		this._value = value;
+	}
 
-    /**
-     * Obtém o valor atual.
-     * @returns {T} O valor atual.
-     */
-    get value(): T {
-        return this._value;
-    }
+	/**
+	 * Obtém o valor atual.
+	 * @returns {T} O valor atual.
+	 */
+	get value(): T {
+		return this._value;
+	}
 
-    /**
-     * Define um novo valor. Se o novo valor for diferente do atual,
-     * emite os eventos 'value' e 'change'.
-     * @param {T} value O novo valor.
-     */
-    set value(value: T) {
-        if (String(value) === String(this._value)) return;
-        this._value = value;
-        this.emit("value", value);
-        this.emit("change", value);
-    }
+	/**
+	 * Define um novo valor. Se o novo valor for diferente do atual,
+	 * emite os eventos 'value' e 'change'.
+	 * @param {T} value O novo valor.
+	 */
+	set value(value: T) {
+		if (String(value) === String(this._value)) return;
+		this._value = value;
+		this.emit("value", value);
+		this.emit("change", value);
+	}
 
-    /**
-     * Reseta o valor para o seu estado inicial.
-     */
-    clear() {
-        this.value = this._initialValue;
-    }
+	/**
+	 * Reseta o valor para o seu estado inicial.
+	 */
+	clear() {
+		this.value = this._initialValue;
+	}
 }
 
 /**
@@ -113,78 +113,78 @@ export class SharedValue<T = unknown> extends EventEmitter<{
  * ```
  */
 export class SharedValues<S> extends EventEmitter<{
-    change: [S];
-    value: [key: keyof S, value: S[keyof S]];
-    destroy: [];
+	change: [S];
+	value: [key: keyof S, value: S[keyof S]];
+	destroy: [];
 }> {
-    /** Um objeto contendo as instâncias individuais de `SharedValue` para cada propriedade do estado. */
-    readonly current: {
-        [K in keyof S]: SharedValue<S[K]>;
-    };
+	/** Um objeto contendo as instâncias individuais de `SharedValue` para cada propriedade do estado. */
+	readonly current: {
+		[K in keyof S]: SharedValue<S[K]>;
+	};
 
-    constructor(values: S) {
-        super();
-        this.current = {} as any;
+	constructor(values: S) {
+		super();
+		this.current = {} as any;
 
-        for (const key in values) {
-            this.current[key] = new SharedValue(values[key]);
-        }
+		for (const key in values) {
+			this.current[key] = new SharedValue(values[key]);
+		}
 
-        this.ready(() => {
-            const events: Function[] = [];
+		this.ready(() => {
+			const events: Function[] = [];
 
-            for (const key in values) {
-                events.push(
-                    this.current[key].on("value", () => {
-                        this.emit("value", key, this.current[key].value);
-                        this.emit("change", this.values);
-                    }).stop
-                );
-            }
+			for (const key in values) {
+				events.push(
+					this.current[key].on("value", () => {
+						this.emit("value", key, this.current[key].value);
+						this.emit("change", this.values);
+					}).stop,
+				);
+			}
 
-            this.once("destroy", () => {
-                for (const stop of events) {
-                    stop();
-                }
-                this.prepare(false);
-            });
-        });
+			this.once("destroy", () => {
+				for (const stop of events) {
+					stop();
+				}
+				this.prepare(false);
+			});
+		});
 
-        this.initialize();
-    }
+		this.initialize();
+	}
 
-    /**
-     * Retorna um snapshot do estado atual como um objeto JavaScript simples.
-     * @returns {S} O objeto de estado atual.
-     */
-    get values(): S {
-        const value: any = {};
-        for (const key in this.current) {
-            value[key] = this.current[key].value;
-        }
-        return value;
-    }
+	/**
+	 * Retorna um snapshot do estado atual como um objeto JavaScript simples.
+	 * @returns {S} O objeto de estado atual.
+	 */
+	get values(): S {
+		const value: any = {};
+		for (const key in this.current) {
+			value[key] = this.current[key].value;
+		}
+		return value;
+	}
 
-    /**
-     * (Uso interno) Prepara os listeners de eventos.
-     */
-    initialize() {
-        this.prepare(true);
-    }
+	/**
+	 * (Uso interno) Prepara os listeners de eventos.
+	 */
+	initialize() {
+		this.prepare(true);
+	}
 
-    /**
-     * Remove todos os listeners de eventos internos para prevenir vazamentos de memória.
-     */
-    destroy() {
-        this.emit("destroy");
-    }
+	/**
+	 * Remove todos os listeners de eventos internos para prevenir vazamentos de memória.
+	 */
+	destroy() {
+		this.emit("destroy");
+	}
 
-    /** Reseta todos os `SharedValue`s internos para seus valores iniciais. */
-    clear() {
-        for (const key in this.current) {
-            this.current[key].clear();
-        }
-    }
+	/** Reseta todos os `SharedValue`s internos para seus valores iniciais. */
+	clear() {
+		for (const key in this.current) {
+			this.current[key].clear();
+		}
+	}
 }
 
 /**
@@ -215,5 +215,5 @@ export class SharedValues<S> extends EventEmitter<{
  * ```
  */
 export const sharedValues = <S>(state: S) => {
-    return new SharedValues<S>(state);
+	return new SharedValues<S>(state);
 };
