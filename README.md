@@ -17,30 +17,29 @@ yarn add @ismael1361/animation
 - [@ismael1361/animation](#ismael1361animation)
   - [Instalação](#instalação)
   - [Indice](#indice)
-  - [Animation](#animation)
-    - [`create: <S extends AnimationState = {}>(animation: AnimationFn<S>, state?: S) => AnimationProps<S>`](#create-s-extends-animationstate--animation-animationfns-state-s--animationpropss)
-    - [Propriedades da Instância](#propriedades-da-instância)
-      - [`.state: { [K in keyof S]: SharedValue<S[K]>; }`](#state--k-in-keyof-s-sharedvaluesk-)
-      - [`.start(): void`](#start-void)
-      - [`.clear(): void`](#clear-void)
-      - [`.pause(): void`](#pause-void)
-      - [`.resume(): void`](#resume-void)
-      - [`.play(): void`](#play-void)
-      - [`.stop(): void`](#stop-void)
-      - [`.restart(): void`](#restart-void)
-    - [Métodos](#métodos)
-      - [`timeSincePreviousFrame(): InputGenerator<number>`](#timesincepreviousframe-inputgeneratornumber)
-      - [`timing(value: SharedValue<number> | TimingCallback, config?: TimingConfig): InputGenerator`](#timingvalue-sharedvaluenumber--timingcallback-config-timingconfig-inputgenerator)
-      - [`wait(duration?: number): InputGenerator`](#waitduration-number-inputgenerator)
-      - [`waitUntil(value: SharedValue<boolean>, invert?: boolean): InputGenerator`](#waituntilvalue-sharedvalueboolean-invert-boolean-inputgenerator)
-      - [`delay(duration?: number, animation?: Input | undefined): InputGenerator`](#delayduration-number-animation-input--undefined-inputgenerator)
-      - [`parallel(...animations: Inputs): InputGenerator`](#parallelanimations-inputs-inputgenerator)
-      - [`all(...animations: Inputs): InputGenerator`](#allanimations-inputs-inputgenerator)
-      - [`any(...animations: Inputs): InputGenerator`](#anyanimations-inputs-inputgenerator)
-      - [`chain(...animations: Inputs): InputGenerator`](#chainanimations-inputs-inputgenerator)
-      - [`stagger(delayMs: number, ...animations: Inputs): InputGenerator`](#staggerdelayms-number-animations-inputs-inputgenerator)
-      - [`sequence(delayMs: number, ...animations: Inputs): InputGenerator`](#sequencedelayms-number-animations-inputs-inputgenerator)
-      - [`loop(...args: [factory: LoopCallback] | [iterations: number, factory: LoopCallback]): InputGenerator`](#loopargs-factory-loopcallback--iterations-number-factory-loopcallback-inputgenerator)
+  - [`create: <S extends AnimationState = {}>(animation: AnimationFn<S>, state?: S) => AnimationProps<S>`](#create-s-extends-animationstate--animation-animationfns-state-s--animationpropss)
+  - [Propriedades da Instância](#propriedades-da-instância)
+    - [`.state: { [K in keyof S]: SharedValue<S[K]>; }`](#state--k-in-keyof-s-sharedvaluesk-)
+    - [`.start(): void`](#start-void)
+    - [`.clear(): void`](#clear-void)
+    - [`.pause(): void`](#pause-void)
+    - [`.resume(): void`](#resume-void)
+    - [`.play(): void`](#play-void)
+    - [`.stop(): void`](#stop-void)
+    - [`.restart(): void`](#restart-void)
+  - [Métodos](#métodos)
+    - [`timeSincePreviousFrame(): InputGenerator<number>`](#timesincepreviousframe-inputgeneratornumber)
+    - [`timing(value: SharedValue<number> | TimingCallback, config?: TimingConfig): InputGenerator`](#timingvalue-sharedvaluenumber--timingcallback-config-timingconfig-inputgenerator)
+    - [`wait(duration?: number): InputGenerator`](#waitduration-number-inputgenerator)
+    - [`waitUntil(value: SharedValue<boolean>, invert?: boolean): InputGenerator`](#waituntilvalue-sharedvalueboolean-invert-boolean-inputgenerator)
+    - [`delay(duration?: number, animation?: Input | undefined): InputGenerator`](#delayduration-number-animation-input--undefined-inputgenerator)
+    - [`parallel(...animations: Inputs): InputGenerator`](#parallelanimations-inputs-inputgenerator)
+    - [`all(...animations: Inputs): InputGenerator`](#allanimations-inputs-inputgenerator)
+    - [`any(...animations: Inputs): InputGenerator`](#anyanimations-inputs-inputgenerator)
+    - [`chain(...animations: Inputs): InputGenerator`](#chainanimations-inputs-inputgenerator)
+    - [`stagger(delayMs: number, ...animations: Inputs): InputGenerator`](#staggerdelayms-number-animations-inputs-inputgenerator)
+    - [`sequence(delayMs: number, ...animations: Inputs): InputGenerator`](#sequencedelayms-number-animations-inputs-inputgenerator)
+    - [`loop(...args: [factory: LoopCallback] | [iterations: number, factory: LoopCallback]): InputGenerator`](#loopargs-factory-loopcallback--iterations-number-factory-loopcallback-inputgenerator)
   - [Easing](#easing)
     - [`Easing.linear(t: number): number`](#easinglineart-number-number)
     - [`Easing.ease(t: number): number`](#easingeaset-number-number)
@@ -77,9 +76,7 @@ yarn add @ismael1361/animation
         - [`.clear(): void`](#clear-void-2)
     - [`sharedValues: <S>(state: S) => SharedValues<S>`](#sharedvalues-sstate-s--sharedvaluess)
 
-## Animation
-
-### `create: <S extends AnimationState = {}>(animation: AnimationFn<S>, state?: S) => AnimationProps<S>`
+## `create: <S extends AnimationState = {}>(animation: AnimationFn<S>, state?: S) => AnimationProps<S>`
 
 Cria e gerencia um loop de animação baseado em um gerador, fornecendo controles como play, pause e stop.
 
@@ -123,9 +120,9 @@ start();
 
 ---
 
-### Propriedades da Instância
+## Propriedades da Instância
 
-#### `.state: { [K in keyof S]: SharedValue<S[K]>; }`
+### `.state: { [K in keyof S]: SharedValue<S[K]>; }`
 
 Um objeto contendo os SharedValues reativos do estado da animação. Você pode usar isso para ler o estado atual da sua animação de fora do gerador.
 
@@ -136,7 +133,7 @@ const myAnimation = create(..., { progress: 0 });
 console.log(myAnimation.state.progress.value);
 ```
 
-#### `.start(): void`
+### `.start(): void`
 
 Inicia a animação do começo. Se já estiver em execução, ela será reiniciada.
 
@@ -146,7 +143,7 @@ const myAnimation = create(..., { progress: 0 });
 myAnimation.start();
 ```
 
-#### `.clear(): void`
+### `.clear(): void`
 
 Limpa quaisquer recursos ou listeners criados pela animação (ex: via `onClear`).
 
@@ -156,7 +153,7 @@ const myAnimation = create(..., { progress: 0 });
 myAnimation.clear();
 ```
 
-#### `.pause(): void`
+### `.pause(): void`
 
 Pausa a animação em seu estado atual.
 
@@ -166,7 +163,7 @@ const myAnimation = create(..., { progress: 0 });
 myAnimation.pause();
 ```
 
-#### `.resume(): void`
+### `.resume(): void`
 
 Retoma uma animação que foi pausada.
 
@@ -177,7 +174,7 @@ myAnimation.pause();
 myAnimation.resume();
 ```
 
-#### `.play(): void`
+### `.play(): void`
 
 Um atalho para `resume()`. Retoma uma animação pausada.
 
@@ -188,7 +185,7 @@ myAnimation.pause();
 myAnimation.play();
 ```
 
-#### `.stop(): void`
+### `.stop(): void`
 
 Para a animação completamente, limpa seus recursos e redefine seu estado.
 
@@ -198,7 +195,7 @@ const myAnimation = create(..., { progress: 0 });
 myAnimation.stop();
 ```
 
-#### `.restart(): void`
+### `.restart(): void`
 
 Um atalho para `stop()` seguido de `start()`. Reinicia a animação.
 
@@ -210,9 +207,9 @@ myAnimation.restart();
 
 ---
 
-### Métodos
+## Métodos
 
-#### `timeSincePreviousFrame(): InputGenerator<number>`
+### `timeSincePreviousFrame(): InputGenerator<number>`
 
 Obtém o tempo decorrido (em milissegundos) desde o quadro de animação anterior. Usado dentro de um gerador de animação para controlar o fluxo de tempo.
 
@@ -235,7 +232,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `timing(value: SharedValue<number> | TimingCallback, config?: TimingConfig): InputGenerator`
+### `timing(value: SharedValue<number> | TimingCallback, config?: TimingConfig): InputGenerator`
 
 Anima propriedade de um `SharedValue<number>` ou executa uma função de retorno de chamada com o valor animado.
 
@@ -266,7 +263,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `wait(duration?: number): InputGenerator`
+### `wait(duration?: number): InputGenerator`
 
 Pausa a execução da animação por uma determinada duração.
 
@@ -289,7 +286,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `waitUntil(value: SharedValue<boolean>, invert?: boolean): InputGenerator`
+### `waitUntil(value: SharedValue<boolean>, invert?: boolean): InputGenerator`
 
 Pausa a execução da animação até que uma condição em um `SharedValue<boolean>` seja atendida.
 
@@ -312,7 +309,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `delay(duration?: number, animation?: Input | undefined): InputGenerator`
+### `delay(duration?: number, animation?: Input | undefined): InputGenerator`
 
 Cria uma pausa e, opcionalmente, executa outra animação em seguida. É um atalho para combinar `wait` com outra animação.
 
@@ -332,7 +329,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `parallel(...animations: Inputs): InputGenerator`
+### `parallel(...animations: Inputs): InputGenerator`
 
 Executa múltiplas animações (geradores) em paralelo. A execução termina quando todas as animações filhas tiverem sido concluídas.
 
@@ -355,7 +352,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `all(...animations: Inputs): InputGenerator`
+### `all(...animations: Inputs): InputGenerator`
 
 Um alias para `parallel`. Executa múltiplas animações em paralelo.A execução termina quando todas as animações filhas tiverem sido concluídas.
 
@@ -378,7 +375,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `any(...animations: Inputs): InputGenerator`
+### `any(...animations: Inputs): InputGenerator`
 
 Executa múltiplas animações (geradores) em paralelo e termina assim que a primeira delas for concluída. As outras animações são interrompidas.
 
@@ -401,7 +398,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `chain(...animations: Inputs): InputGenerator`
+### `chain(...animations: Inputs): InputGenerator`
 
 Executa múltiplas animações (geradores) em sequência, uma após a outra.
 
@@ -424,7 +421,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `stagger(delayMs: number, ...animations: Inputs): InputGenerator`
+### `stagger(delayMs: number, ...animations: Inputs): InputGenerator`
 
 Executa múltiplas animações em paralelo, mas com um atraso escalonado entre o início de cada uma.
 
@@ -447,7 +444,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `sequence(delayMs: number, ...animations: Inputs): InputGenerator`
+### `sequence(delayMs: number, ...animations: Inputs): InputGenerator`
 
 Executa múltiplas animações em sequência, com um atraso definido entre o fim de uma e o início da próxima.
 
@@ -470,7 +467,7 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-#### `loop(...args: [factory: LoopCallback] | [iterations: number, factory: LoopCallback]): InputGenerator`
+### `loop(...args: [factory: LoopCallback] | [iterations: number, factory: LoopCallback]): InputGenerator`
 
 Executa uma animação (gerador) repetidamente.
 
