@@ -20,6 +20,7 @@ yarn add @ismael1361/animation
   - [`create: <S extends AnimationState = {}>(animation: AnimationFn<S>, state?: S) => AnimationProps<S>`](#create-s-extends-animationstate--animation-animationfns-state-s--animationpropss)
   - [Propriedades da Instância](#propriedades-da-instância)
     - [`.state: { [K in keyof S]: SharedValue<S[K]>; }`](#state--k-in-keyof-s-sharedvaluesk-)
+    - [`.onChange: (callback: (state: { [K in keyof S]: SharedValue<S[K]>; }) => void) => EventHandler`](#onchange-callback-state--k-in-keyof-s-sharedvaluesk---void--eventhandler)
     - [`.start(): void`](#start-void)
     - [`.clear(): void`](#clear-void)
     - [`.pause(): void`](#pause-void)
@@ -131,6 +132,18 @@ Um objeto contendo os SharedValues reativos do estado da animação. Você pode 
 const myAnimation = create(..., { progress: 0 });
 // Em um loop de renderização ou efeito:
 console.log(myAnimation.state.progress.value);
+```
+
+### `.onChange: (callback: (state: { [K in keyof S]: SharedValue<S[K]>; }) => void) => EventHandler`
+
+Registra um ouvinte que é acionado sempre que qualquer valor no estado da animação é alterado. Isso é útil para sincronizar o estado da animação com a UI ou outra lógica externa, sem a necessidade de usar um hook React para re-renderizar o componente.
+
+**Exemplo:**
+```typescript
+const myAnimation = create(..., { progress: 0 });
+myAnimation.onChange((state) => {
+  console.log(`Progresso: ${state.progress.value}`);
+});
 ```
 
 ### `.start(): void`

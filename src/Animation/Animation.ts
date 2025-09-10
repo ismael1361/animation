@@ -495,6 +495,13 @@ export const create = <S extends AnimationState = {}>(animation: AnimationFn<S>,
 
 	return {
 		state: values.current,
+
+		onChange(callback) {
+			return values.on("change", () => {
+				callback(values.current);
+			});
+		},
+
 		start() {
 			if (raf) cancelAnimation(raf);
 			gen = null;
