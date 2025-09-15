@@ -15,7 +15,7 @@ export type Inputs = Input[];
 export type LoopCallback = (i: number) => InputGenerator;
 
 export interface TimingConfig {
-	from: number;
+	from?: number;
 	to: number;
 	easing?: EasingFunction;
 	delay?: number;

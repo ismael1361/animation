@@ -7,7 +7,7 @@ export const requestAnimation = (callback: FrameRequestCallback): number => {
 		return requestAnimationFrame(callback);
 	} catch {}
 
-	return setTimeout(callback, 16);
+	return setTimeout(callback, 1);
 };
 
 export const cancelAnimation = (id: number): void => {
