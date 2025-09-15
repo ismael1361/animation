@@ -516,7 +516,6 @@ export const create = <S extends AnimationState = {}>(animation: AnimationFn<S>,
 
 		clear() {
 			values.clear();
-			values.destroy();
 			clearFunctions.forEach((f) => f());
 			clearFunctions = [];
 		},
@@ -543,6 +542,12 @@ export const create = <S extends AnimationState = {}>(animation: AnimationFn<S>,
 		restart() {
 			this.stop();
 			this.resume();
+		},
+
+		destroy() {
+			this.stop();
+			this.clear();
+			values.destroy();
 		},
 	};
 };

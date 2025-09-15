@@ -105,4 +105,23 @@ export interface AnimationProps<S> {
 	 * @example myAnimation.restart();
 	 */
 	restart(): void;
+	/**
+	 * Para completamente a animação e libera todos os recursos associados, incluindo
+	 * todos os ouvintes de eventos internos (`onChange`, etc.).
+	 *
+	 * Este método é a etapa final de limpeza e deve ser chamado quando a instância da animação
+	 * não for mais necessária, para evitar vazamentos de memória. Após chamar `destroy()`,
+	 * a instância da animação não deve ser mais utilizada.
+	 *
+	 * @see {@link stop}
+	 * @example
+	 * ```ts
+	 * const myAnimation = create(...);
+	 * myAnimation.start();
+	 *
+	 * // Quando o componente que usa a animação é desmontado:
+	 * myAnimation.destroy();
+	 * ```
+	 */
+	destroy(): void;
 }

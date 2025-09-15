@@ -1,6 +1,6 @@
 {
 	"name": "@ismael1361/animation",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "Uma coleção de animações úteis criadas com TypeScript",
 	"main": "dist/index.js",
 	"module": "dist/index.esm.js",
