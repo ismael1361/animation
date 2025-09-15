@@ -24,7 +24,7 @@ export interface TimingConfig {
 
 export type TimingCallback = (i: number) => void | boolean;
 
-export type AnimationState = Record<string, unknown>;
+export type AnimationState = Record<string, number>;
 
 export type AnimationFn<S> = (state: SharedValues<S>["current"]) => InputGenerator;
 
