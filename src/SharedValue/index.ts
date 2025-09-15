@@ -29,6 +29,7 @@ import { EventEmitter } from "@ismael1361/utils";
 export class SharedValue<T = unknown> extends EventEmitter<{
 	change: [T];
 	value: [T];
+	destroy: [];
 }> {
 	private _initialValue: T;
 	private _value: T;
@@ -59,6 +60,15 @@ export class SharedValue<T = unknown> extends EventEmitter<{
 		this._value = value;
 		this.emit("value", value);
 		this.emit("change", value);
+	}
+
+	/**
+	 * Remove todos os listeners de eventos internos para prevenir vazamentos de memória.
+	 */
+	destroy() {
+		this.emit("destroy");
+		this.clearEvents();
+		this.clear();
 	}
 
 	/**
@@ -177,6 +187,8 @@ export class SharedValues<S> extends EventEmitter<{
 	 */
 	destroy() {
 		this.emit("destroy");
+		this.clearEvents();
+		this.clear();
 	}
 
 	/** Reseta todos os `SharedValue`s internos para seus valores iniciais. */
