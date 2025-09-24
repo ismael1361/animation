@@ -1,4 +1,4 @@
-import type { SharedValues } from "../SharedValue";
+import type { SharedValuesState } from "../SharedValue";
 import type { EventHandler } from "@ismael1361/utils";
 
 export type EasingFunction = (t: number) => number;
@@ -26,7 +26,7 @@ export type TimingCallback = (i: number) => void | boolean;
 
 export type AnimationState = Record<string, number>;
 
-export type AnimationFn<S> = (state: SharedValues<S>["current"]) => InputGenerator;
+export type AnimationFn<S> = (state: SharedValuesState<S>) => InputGenerator;
 
 export interface AnimationProps<S> {
 	/**
@@ -39,7 +39,7 @@ export interface AnimationProps<S> {
 	 * console.log(myAnimation.state.progress.value);
 	 * ```
 	 */
-	state: SharedValues<S>["current"];
+	state: SharedValuesState<S>;
 	/**
 	 * Registra um ouvinte que é acionado sempre que qualquer valor no estado da animação é alterado.
 	 * Isso é útil para sincronizar o estado da animação com a UI ou outra lógica externa,
@@ -66,7 +66,7 @@ export interface AnimationProps<S> {
 	 * // eventHandler.stop();
 	 * ```
 	 */
-	onChange: (callback: (state: SharedValues<S>["current"]) => void) => EventHandler;
+	onChange: (callback: (state: SharedValuesState<S>) => void) => EventHandler;
 	/**
 	 * Inicia a animação do começo. Se já estiver em execução, ela será reiniciada.
 	 * @example myAnimation.start();

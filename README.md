@@ -17,67 +17,72 @@ yarn add @ismael1361/animation
 - [@ismael1361/animation](#ismael1361animation)
   - [Instalação](#instalação)
   - [Indice](#indice)
-  - [`create: <S extends AnimationState = {}>(animation: AnimationFn<S>, state?: S) => AnimationProps<S>`](#create-s-extends-animationstate--animation-animationfns-state-s--animationpropss)
+  - [`create`](#create)
   - [Propriedades da Instância](#propriedades-da-instância)
-    - [`.state: { [K in keyof S]: SharedValue<S[K]>; }`](#state--k-in-keyof-s-sharedvaluesk-)
-    - [`.onChange: (callback: (state: { [K in keyof S]: SharedValue<S[K]>; }) => void) => EventHandler`](#onchange-callback-state--k-in-keyof-s-sharedvaluesk---void--eventhandler)
-    - [`.start(): void`](#start-void)
-    - [`.clear(): void`](#clear-void)
-    - [`.pause(): void`](#pause-void)
-    - [`.resume(): void`](#resume-void)
-    - [`.play(): void`](#play-void)
-    - [`.stop(): void`](#stop-void)
-    - [`.restart(): void`](#restart-void)
+    - [`state`](#state)
+    - [`onChange`](#onchange)
+    - [`start`](#start)
+    - [`clear`](#clear)
+    - [`pause`](#pause)
+    - [`resume`](#resume)
+    - [`play`](#play)
+    - [`stop`](#stop)
+    - [`restart`](#restart)
   - [Métodos](#métodos)
-    - [`timeSincePreviousFrame(): InputGenerator<number>`](#timesincepreviousframe-inputgeneratornumber)
-    - [`timing(value: SharedValue<number> | TimingCallback, config?: TimingConfig): InputGenerator`](#timingvalue-sharedvaluenumber--timingcallback-config-timingconfig-inputgenerator)
-    - [`wait(duration?: number): InputGenerator`](#waitduration-number-inputgenerator)
-    - [`waitUntil(value: SharedValue<boolean>, invert?: boolean): InputGenerator`](#waituntilvalue-sharedvalueboolean-invert-boolean-inputgenerator)
-    - [`delay(duration?: number, animation?: Input | undefined): InputGenerator`](#delayduration-number-animation-input--undefined-inputgenerator)
-    - [`parallel(...animations: Inputs): InputGenerator`](#parallelanimations-inputs-inputgenerator)
-    - [`all(...animations: Inputs): InputGenerator`](#allanimations-inputs-inputgenerator)
-    - [`any(...animations: Inputs): InputGenerator`](#anyanimations-inputs-inputgenerator)
-    - [`chain(...animations: Inputs): InputGenerator`](#chainanimations-inputs-inputgenerator)
-    - [`stagger(delayMs: number, ...animations: Inputs): InputGenerator`](#staggerdelayms-number-animations-inputs-inputgenerator)
-    - [`sequence(delayMs: number, ...animations: Inputs): InputGenerator`](#sequencedelayms-number-animations-inputs-inputgenerator)
-    - [`loop(...args: [factory: LoopCallback] | [iterations: number, factory: LoopCallback]): InputGenerator`](#loopargs-factory-loopcallback--iterations-number-factory-loopcallback-inputgenerator)
+    - [`timeSincePreviousFrame`](#timesincepreviousframe)
+    - [`timing`](#timing)
+    - [`wait`](#wait)
+    - [`waitUntil`](#waituntil)
+    - [`delay`](#delay)
+    - [`parallel`](#parallel)
+    - [`all`](#all)
+    - [`any`](#any)
+    - [`chain`](#chain)
+    - [`stagger`](#stagger)
+    - [`sequence`](#sequence)
+    - [`loop`](#loop)
   - [Easing](#easing)
-    - [`Easing.linear(t: number): number`](#easinglineart-number-number)
-    - [`Easing.ease(t: number): number`](#easingeaset-number-number)
-    - [`Easing.quad(t: number): number`](#easingquadt-number-number)
-    - [`Easing.cubic(t: number): number`](#easingcubict-number-number)
-    - [`Easing.poly(n: number): EasingFunction`](#easingpolyn-number-easingfunction)
-    - [`Easing.sin(t: number): number`](#easingsint-number-number)
-    - [`Easing.circle(t: number): number`](#easingcirclet-number-number)
-    - [`Easing.exp(t: number): number`](#easingexpt-number-number)
-    - [`Easing.elastic(bounciness?: number): EasingFunction`](#easingelasticbounciness-number-easingfunction)
-    - [`Easing.back(s?: number): EasingFunction`](#easingbacks-number-easingfunction)
-    - [`Easing.bounce(t: number): number`](#easingbouncet-number-number)
-    - [`Easing.bezier(x1: number, y1: number, x2: number, y2: number): { factory: () => EasingFunction; }`](#easingbezierx1-number-y1-number-x2-number-y2-number--factory---easingfunction-)
-    - [`Easing.bezierFn(x1: number, y1: number, x2: number, y2: number): EasingFunction`](#easingbezierfnx1-number-y1-number-x2-number-y2-number-easingfunction)
-    - [`Easing.in(easing: EasingFunction): EasingFunction`](#easingineasing-easingfunction-easingfunction)
-    - [`Easing.out(easing: EasingFunction): EasingFunction`](#easingouteasing-easingfunction-easingfunction)
-    - [`Easing.inOut(easing: EasingFunction): EasingFunction`](#easinginouteasing-easingfunction-easingfunction)
-    - [`Easing.steps(n?: number, roundToNextStep?: boolean | undefined): EasingFunction`](#easingstepsn-number-roundtonextstep-boolean--undefined-easingfunction)
-  - [SharedValue](#sharedvalue)
-    - [`class SharedValue<T>`](#class-sharedvaluet)
+    - [`Easing.linear`](#easinglinear)
+    - [`Easing.ease`](#easingease)
+    - [`Easing.quad`](#easingquad)
+    - [`Easing.cubic`](#easingcubic)
+    - [`Easing.poly`](#easingpoly)
+    - [`Easing.sin`](#easingsin)
+    - [`Easing.circle`](#easingcircle)
+    - [`Easing.exp`](#easingexp)
+    - [`Easing.elastic`](#easingelastic)
+    - [`Easing.back`](#easingback)
+    - [`Easing.bounce`](#easingbounce)
+    - [`Easing.bezier`](#easingbezier)
+    - [`Easing.bezierFn`](#easingbezierfn)
+    - [`Easing.in`](#easingin)
+    - [`Easing.out`](#easingout)
+    - [`Easing.inOut`](#easinginout)
+    - [`Easing.steps`](#easingsteps)
+  - [Shared Value](#shared-value)
+    - [`SharedValue`](#sharedvalue)
       - [Propriedades da Instância](#propriedades-da-instância-1)
-        - [`.value: T`](#value-t)
-        - [`.on(event: 'value' | 'change', callback: (value: T) => void): void`](#onevent-value--change-callback-value-t--void-void)
-        - [`.off(event: 'value' | 'change', callback: (value: T) => void): void`](#offevent-value--change-callback-value-t--void-void)
-        - [`.clear(): void`](#clear-void-1)
-    - [`class SharedValues<S>`](#class-sharedvaluess)
+        - [`value`](#value)
+        - [`current`](#current)
+        - [`on`](#on)
+        - [`off`](#off)
+        - [`clear`](#clear-1)
+    - [`SharedValues`](#sharedvalues)
       - [Propriedades da Instância](#propriedades-da-instância-2)
-        - [`.values: S`](#values-s)
-        - [`.current: { [K in keyof S]: SharedValue<S[K]>; }`](#current--k-in-keyof-s-sharedvaluesk-)
-        - [`.on(event: 'value' | 'change', callback: (key: keyof S, value: S[keyof S]) => void): void`](#onevent-value--change-callback-key-keyof-s-value-skeyof-s--void-void)
-        - [`.off(event: 'value' | 'change', callback: (key: keyof S, value: S[keyof S]) => void): void`](#offevent-value--change-callback-key-keyof-s-value-skeyof-s--void-void)
-        - [`.initialize(): void`](#initialize-void)
-        - [`.destroy(): void`](#destroy-void)
-        - [`.clear(): void`](#clear-void-2)
-    - [`sharedValues: <S>(state: S) => SharedValues<S>`](#sharedvalues-sstate-s--sharedvaluess)
+        - [`values`](#values)
+        - [`current`](#current-1)
+        - [`on`](#on-1)
+        - [`off`](#off-1)
+        - [`initialize`](#initialize)
+        - [`destroy`](#destroy)
+        - [`clear`](#clear-2)
+    - [`sharedValues`](#sharedvalues-1)
 
-## `create: <S extends AnimationState = {}>(animation: AnimationFn<S>, state?: S) => AnimationProps<S>`
+## `create`
+
+```ts
+create<S extends AnimationState = {}>(animation: AnimationFn<S>, state?: S): AnimationProps<S>;
+```
 
 Cria e gerencia um loop de animação baseado em um gerador, fornecendo controles como play, pause e stop.
 
@@ -123,7 +128,11 @@ start();
 
 ## Propriedades da Instância
 
-### `.state: { [K in keyof S]: SharedValue<S[K]>; }`
+### `state`
+
+```ts
+.state: SharedValuesState<S>;
+```
 
 Um objeto contendo os SharedValues reativos do estado da animação. Você pode usar isso para ler o estado atual da sua animação de fora do gerador.
 
@@ -134,7 +143,11 @@ const myAnimation = create(..., { progress: 0 });
 console.log(myAnimation.state.progress.value);
 ```
 
-### `.onChange: (callback: (state: { [K in keyof S]: SharedValue<S[K]>; }) => void) => EventHandler`
+### `onChange`
+
+```ts
+.onChange(callback: (state: SharedValuesState<S>) => void): EventHandler;
+```
 
 Registra um ouvinte que é acionado sempre que qualquer valor no estado da animação é alterado. Isso é útil para sincronizar o estado da animação com a UI ou outra lógica externa, sem a necessidade de usar um hook React para re-renderizar o componente.
 
@@ -146,7 +159,11 @@ myAnimation.onChange((state) => {
 });
 ```
 
-### `.start(): void`
+### `start`
+
+```ts
+.start(): void;
+```
 
 Inicia a animação do começo. Se já estiver em execução, ela será reiniciada.
 
@@ -156,7 +173,11 @@ const myAnimation = create(..., { progress: 0 });
 myAnimation.start();
 ```
 
-### `.clear(): void`
+### `clear`
+
+```ts
+.clear(): void;
+```
 
 Limpa quaisquer recursos ou listeners criados pela animação (ex: via `onClear`).
 
@@ -166,7 +187,11 @@ const myAnimation = create(..., { progress: 0 });
 myAnimation.clear();
 ```
 
-### `.pause(): void`
+### `pause`
+
+```ts
+.pause(): void;
+```
 
 Pausa a animação em seu estado atual.
 
@@ -176,7 +201,11 @@ const myAnimation = create(..., { progress: 0 });
 myAnimation.pause();
 ```
 
-### `.resume(): void`
+### `resume`
+
+```ts
+.resume(): void;
+```
 
 Retoma uma animação que foi pausada.
 
@@ -187,7 +216,11 @@ myAnimation.pause();
 myAnimation.resume();
 ```
 
-### `.play(): void`
+### `play`
+
+```ts
+.play(): void;
+```
 
 Um atalho para `resume()`. Retoma uma animação pausada.
 
@@ -198,7 +231,11 @@ myAnimation.pause();
 myAnimation.play();
 ```
 
-### `.stop(): void`
+### `stop`
+
+```ts
+.stop(): void;
+```
 
 Para a animação completamente, limpa seus recursos e redefine seu estado.
 
@@ -208,7 +245,11 @@ const myAnimation = create(..., { progress: 0 });
 myAnimation.stop();
 ```
 
-### `.restart(): void`
+### `restart`
+
+```ts
+.restart(): void;
+```
 
 Um atalho para `stop()` seguido de `start()`. Reinicia a animação.
 
@@ -222,7 +263,11 @@ myAnimation.restart();
 
 ## Métodos
 
-### `timeSincePreviousFrame(): InputGenerator<number>`
+### `timeSincePreviousFrame`
+
+```ts
+timeSincePreviousFrame(): InputGenerator<number>;
+```
 
 Obtém o tempo decorrido (em milissegundos) desde o quadro de animação anterior. Usado dentro de um gerador de animação para controlar o fluxo de tempo.
 
@@ -245,7 +290,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `timing(value: SharedValue<number> | TimingCallback, config?: TimingConfig): InputGenerator`
+### `timing`
+
+```ts
+timing(value: SharedValue<number> | TimingCallback, config?: TimingConfig): InputGenerator
+```
 
 Anima propriedade de um `SharedValue<number>` ou executa uma função de retorno de chamada com o valor animado.
 
@@ -276,7 +325,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `wait(duration?: number): InputGenerator`
+### `wait`
+
+```ts
+wait(duration?: number): InputGenerator;
+```
 
 Pausa a execução da animação por uma determinada duração.
 
@@ -299,12 +352,16 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `waitUntil(value: SharedValue<boolean>, invert?: boolean): InputGenerator`
+### `waitUntil`
+
+```ts
+waitUntil(value: SharedValue<boolean>, invert?: boolean): InputGenerator
+```
 
 Pausa a execução da animação até que uma condição em um `SharedValue<boolean>` seja atendida.
 
 **Exemplo:**
-```typescript
+```ts
 import { create, timing, waitUntil } from '@ismael1361/animation';
 
 const animation = create(function* (state) {
@@ -322,7 +379,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `delay(duration?: number, animation?: Input | undefined): InputGenerator`
+### `delay`
+
+```ts
+delay(duration?: number | undefined, animation?: Input | undefined): InputGenerator
+```
 
 Cria uma pausa e, opcionalmente, executa outra animação em seguida. É um atalho para combinar `wait` com outra animação.
 
@@ -342,7 +403,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `parallel(...animations: Inputs): InputGenerator`
+### `parallel`
+
+```ts
+parallel(...animations: Inputs): InputGenerator
+```
 
 Executa múltiplas animações (geradores) em paralelo. A execução termina quando todas as animações filhas tiverem sido concluídas.
 
@@ -365,7 +430,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `all(...animations: Inputs): InputGenerator`
+### `all`
+
+```ts
+all(...animations: Inputs): InputGenerator
+```
 
 Um alias para `parallel`. Executa múltiplas animações em paralelo.A execução termina quando todas as animações filhas tiverem sido concluídas.
 
@@ -388,7 +457,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `any(...animations: Inputs): InputGenerator`
+### `any`
+
+```ts
+any(...animations: Inputs): InputGenerator
+```
 
 Executa múltiplas animações (geradores) em paralelo e termina assim que a primeira delas for concluída. As outras animações são interrompidas.
 
@@ -411,7 +484,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `chain(...animations: Inputs): InputGenerator`
+### `chain`
+
+```ts
+chain(...animations: Inputs): InputGenerator
+```
 
 Executa múltiplas animações (geradores) em sequência, uma após a outra.
 
@@ -434,7 +511,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `stagger(delayMs: number, ...animations: Inputs): InputGenerator`
+### `stagger`
+
+```ts
+stagger(delayMs: number, ...animations: Inputs): InputGenerator
+```
 
 Executa múltiplas animações em paralelo, mas com um atraso escalonado entre o início de cada uma.
 
@@ -457,7 +538,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `sequence(delayMs: number, ...animations: Inputs): InputGenerator`
+### `sequence`
+
+```ts
+sequence(delayMs: number, ...animations: Inputs): InputGenerator
+```
 
 Executa múltiplas animações em sequência, com um atraso definido entre o fim de uma e o início da próxima.
 
@@ -480,7 +565,12 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `loop(...args: [factory: LoopCallback] | [iterations: number, factory: LoopCallback]): InputGenerator`
+### `loop`
+
+```ts
+loop(factory: LoopCallback): InputGenerator
+loop(iterations: number, factory: LoopCallback): InputGenerator
+```
 
 Executa uma animação (gerador) repetidamente.
 
@@ -506,7 +596,11 @@ animation.start();
 
 ## Easing
 
-### `Easing.linear(t: number): number`
+### `Easing.linear`
+
+```ts
+Easing.linear(t: number): number
+```
 
 Função linear, `f(t) = t`. A posição se correlaciona um-para-um com o tempo decorrido.
 
@@ -524,7 +618,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.ease(t: number): number`
+### `Easing.ease`
+
+```ts
+Easing.ease(t: number): number
+```
 
 Uma interação inercial simples, semelhante a um objeto acelerando lentamente.
 
@@ -542,7 +640,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.quad(t: number): number`
+### `Easing.quad`
+
+```ts
+Easing.quad(t: number): number
+```
 
 Função quadrática, `f(t) = t * t`. A posição é igual ao quadrado do tempo decorrido.
 
@@ -560,7 +662,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.cubic(t: number): number`
+### `Easing.cubic`
+
+```ts
+Easing.cubic(t: number): number
+```
 
 Função cúbica, `f(t) = t * t * t`. A posição é igual ao cubo do tempo decorrido.
 
@@ -578,7 +684,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.poly(n: number): EasingFunction`
+### `Easing.poly`
+
+```ts
+Easing.poly(n: number): EasingFunction
+```
 
 Cria uma função de potência. A posição é igual à N-ésima potência do tempo decorrido.
 
@@ -596,7 +706,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.sin(t: number): number`
+### `Easing.sin`
+
+```ts
+Easing.sin(t: number): number
+```
 
 Função sinusoidal.
 
@@ -614,7 +728,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.circle(t: number): number`
+### `Easing.circle`
+
+```ts
+Easing.circle(t: number): number
+```
 
 Função circular.
 
@@ -632,7 +750,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.exp(t: number): number`
+### `Easing.exp`
+
+```ts
+Easing.exp(t: number): number
+```
 
 Função exponencial.
 
@@ -650,7 +772,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.elastic(bounciness?: number): EasingFunction`
+### `Easing.elastic`
+
+```ts
+Easing.elastic(bounciness?: number): EasingFunction
+```
 
 Cria uma interação elástica simples, como uma mola oscilando. O `bounciness` (elasticidade) padrão é 1. Um valor 0 não ultrapassa o limite, e um valor N > 1 ultrapassará o limite aproximadamente N vezes.
 
@@ -668,7 +794,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.back(s?: number): EasingFunction`
+### `Easing.back`
+
+```ts
+Easing.back(s?: number): EasingFunction
+```
 
 Cria um efeito onde o objeto recua um pouco antes de avançar.
 
@@ -686,7 +816,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.bounce(t: number): number`
+### `Easing.bounce`
+
+```ts
+Easing.bounce(t: number): number
+```
 
 Fornece um efeito de "quicar" simples.
 
@@ -704,7 +838,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.bezier(x1: number, y1: number, x2: number, y2: number): { factory: () => EasingFunction; }`
+### `Easing.bezier`
+
+```ts
+Easing.bezier(x1: number, y1: number, x2: number, y2: number): { factory: () => EasingFunction; }
+```
 
 Cria uma curva de Bézier cúbica, equivalente à `transition-timing-function` do CSS.
 
@@ -722,7 +860,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.bezierFn(x1: number, y1: number, x2: number, y2: number): EasingFunction`
+### `Easing.bezierFn`
+
+```ts
+Easing.bezierFn(x1: number, y1: number, x2: number, y2: number): EasingFunction
+```
 
 A implementação base para a curva de Bézier cúbica.
 
@@ -740,7 +882,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.in(easing: EasingFunction): EasingFunction`
+### `Easing.in`
+
+```ts
+Easing.in(easing: EasingFunction): EasingFunction
+```
 
 Modificador que executa uma função de easing na sua forma original (aceleração no início).
 
@@ -758,7 +904,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.out(easing: EasingFunction): EasingFunction`
+### `Easing.out`
+
+```ts
+Easing.out(easing: EasingFunction): EasingFunction
+```
 
 Modificador que executa uma função de easing de forma invertida (desaceleração no final).
 
@@ -776,7 +926,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.inOut(easing: EasingFunction): EasingFunction`
+### `Easing.inOut`
+
+```ts
+Easing.inOut(easing: EasingFunction): EasingFunction
+```
 
 Modificador que torna qualquer função de easing simétrica. A função acelera na primeira metade da duração e desacelera na segunda metade.
 
@@ -794,7 +948,11 @@ const animation = create(function* (state) {
 animation.start();
 ```
 
-### `Easing.steps(n?: number, roundToNextStep?: boolean | undefined): EasingFunction`
+### `Easing.steps`
+
+```ts
+Easing.steps(n?: number, roundToNextStep?: boolean | undefined): EasingFunction
+```
 
 Cria uma função de easing que avança em degraus discretos.
 
@@ -815,9 +973,13 @@ animation.start();
 ---
 
 
-## SharedValue
+## Shared Value
 
-### `class SharedValue<T>`
+### `SharedValue`
+
+```ts
+class SharedValue<T>
+```
 
 Uma classe que encapsula um valor, permitindo que ele seja "observável" e reativo. Emite eventos quando seu valor é alterado, sendo a base para a reatividade nas animações.
 
@@ -846,25 +1008,55 @@ console.log(opacity.value); // Logs: 0
 
 #### Propriedades da Instância
 
-##### `.value: T`
+##### `value`
+
+```ts
+.value: T;
+```
 
 Obtém o valor atual. Define um novo valor. Se o novo valor for diferente do atual, emite os eventos 'value' e 'change'.
 
-##### `.on(event: 'value' | 'change', callback: (value: T) => void): void`
+##### `current`
+
+```ts
+.current: T;
+```
+
+Obtém o valor atual. Define um novo valor. Se o novo valor for diferente do atual, emite os eventos 'value' e 'change'.
+
+##### `on`
+
+```ts
+.on(event: 'value', callback: (value: T) => void): void;
+.on(event: 'change', callback: (value: T) => void): void;
+```
 
 Adiciona um listener para um evento especifico.
 
-##### `.off(event: 'value' | 'change', callback: (value: T) => void): void`
+##### `off`
+
+```ts
+.off(event: 'value', callback: (value: T) => void): void;
+.off(event: 'change', callback: (value: T) => void): void;
+```
 
 Remove um listener para um evento especifico.
 
-##### `.clear(): void`
+##### `clear`
+
+```ts
+.clear(): void
+```
 
 Limpa o valor e emite o evento 'change' com o valor inicial.
 
 ---
 
-### `class SharedValues<S>`
+### `SharedValues`
+
+```ts
+class SharedValues<S>
+```
 
 Gerencia um grupo de instâncias de `SharedValue` como um único objeto de estado.
 
@@ -904,35 +1096,69 @@ console.log(stateManager.values); // { x: 0, y: 100, opacity: 1 }
 
 #### Propriedades da Instância
 
-##### `.values: S`
+##### `values`
+
+```ts
+.values: S;
+```
 
 Obtém um snapshot dos valores atuais.
 
-##### `.current: { [K in keyof S]: SharedValue<S[K]>; }`
+##### `current`
 
-Obtém um objeto com instâncias de `SharedValue` para cada propriedade do estado.
+```ts
+.current: SharedValuesState<S>;
+```
 
-##### `.on(event: 'value' | 'change', callback: (key: keyof S, value: S[keyof S]) => void): void`
+Obtém o objeto de estado reativo, onde cada propriedade é uma instância de `SharedValue`. Use isso para acessar e manipular os valores individuais da animação diretamente.
+
+##### `on`
+
+```ts
+.on(event: 'value', callback: (key: keyof S, value: S[keyof S]) => void): void;
+.on(event: 'change', callback: (values: S) => void): void;
+```
 
 Adiciona um listener para um evento especifico.
 
-##### `.off(event: 'value' | 'change', callback: (key: keyof S, value: S[keyof S]) => void): void`
+##### `off`
+
+```ts
+.off(event: 'value', callback: (key: keyof S, value: S[keyof S]) => void): void;
+.off(event: 'change', callback: (values: S) => void): void;
+```
 
 Remove um listener para um evento especifico.
 
-##### `.initialize(): void`
+##### `initialize`
+
+```ts
+.initialize(): void
+```
 
 Reinicia todos os valores para o estado inicial.
 
-##### `.destroy(): void`
+##### `destroy`
+
+```ts
+.destroy(): void
+```
 
 Limpa todos os listeners.
 
-##### `.clear(): void`
+##### `clear`
+
+```ts
+.clear(): void
+```
 
 Limpa todos os valores e emite o evento 'change' com o estado inicial.
 
-### `sharedValues: <S>(state: S) => SharedValues<S>`
+### `sharedValues`
+
+```ts
+sharedValues<S>(state: S): SharedValues<S>
+```
 
 Função de fábrica para criar e retornar uma nova instância de `SharedValues`.
 

@@ -27,19 +27,20 @@ import { EventEmitter } from "@ismael1361/utils";
  * ```
  */
 export class SharedValue<T = unknown> extends EventEmitter<{
-	change: [T];
-	value: [T];
+	change: [value: T];
+	value: [value: T];
 	destroy: [];
 }> {
-	private _initialValue: T;
-	private _value: T;
+	private __initialValue__: T;
+	private __value__: T;
+
 	/**
 	 * @param {T} value O valor inicial a ser encapsulado.
 	 */
 	constructor(value: T) {
 		super();
-		this._initialValue = value;
-		this._value = value;
+		this.__initialValue__ = value;
+		this.__value__ = value;
 	}
 
 	/**
@@ -47,7 +48,7 @@ export class SharedValue<T = unknown> extends EventEmitter<{
 	 * @returns {T} O valor atual.
 	 */
 	get value(): T {
-		return this._value;
+		return this.__value__;
 	}
 
 	/**
@@ -56,10 +57,27 @@ export class SharedValue<T = unknown> extends EventEmitter<{
 	 * @param {T} value O novo valor.
 	 */
 	set value(value: T) {
-		if (String(value) === String(this._value)) return;
-		this._value = value;
+		// if (String(value) === String(this.__value__)) return;
+		this.__value__ = value;
 		this.emit("value", value);
 		this.emit("change", value);
+	}
+
+	/**
+	 * Obtém o valor atual.
+	 * @returns {T} O valor atual.
+	 */
+	get current(): T {
+		return this.value;
+	}
+
+	/**
+	 * Define um novo valor. Se o novo valor for diferente do atual,
+	 * emite os eventos 'value' e 'change'.
+	 * @param {T} value O novo valor.
+	 */
+	set current(value: T) {
+		this.value = value;
 	}
 
 	/**
@@ -75,9 +93,11 @@ export class SharedValue<T = unknown> extends EventEmitter<{
 	 * Reseta o valor para o seu estado inicial.
 	 */
 	clear() {
-		this.value = this._initialValue;
+		this.value = this.__initialValue__;
 	}
 }
+
+export type SharedValuesState<T> = { [K in keyof T]: SharedValue<T[K]> };
 
 /**
  * Gerencia um grupo de instâncias de `SharedValue` como um único objeto de estado.
@@ -123,21 +143,19 @@ export class SharedValue<T = unknown> extends EventEmitter<{
  * ```
  */
 export class SharedValues<S> extends EventEmitter<{
-	change: [S];
+	change: [values: S];
 	value: [key: keyof S, value: S[keyof S]];
 	destroy: [];
 }> {
 	/** Um objeto contendo as instâncias individuais de `SharedValue` para cada propriedade do estado. */
-	readonly current: {
-		[K in keyof S]: SharedValue<S[K]>;
-	};
+	private readonly __current__: SharedValuesState<S>;
 
 	constructor(values: S) {
 		super();
-		this.current = {} as any;
+		this.__current__ = {} as any;
 
 		for (const key in values) {
-			this.current[key] = new SharedValue(values[key]);
+			this.__current__[key] = new SharedValue(values[key]);
 		}
 
 		this.ready(() => {
@@ -145,8 +163,8 @@ export class SharedValues<S> extends EventEmitter<{
 
 			for (const key in values) {
 				events.push(
-					this.current[key].on("value", () => {
-						this.emit("value", key, this.current[key].value);
+					this.__current__[key].on("value", () => {
+						this.emit("value", key, this.__current__[key].value);
 						this.emit("change", this.values);
 					}).stop,
 				);
@@ -169,10 +187,42 @@ export class SharedValues<S> extends EventEmitter<{
 	 */
 	get values(): S {
 		const value: any = {};
-		for (const key in this.current) {
-			value[key] = this.current[key].value;
+		for (const key in this.__current__) {
+			value[key] = this.__current__[key].value;
 		}
-		return value;
+		const self = this;
+		return new Proxy(value, {
+			get(target, key) {
+				Reflect.set(target, key, self.__current__[key as keyof S].value);
+				return Reflect.get(target, key);
+			},
+			set(target, key, value: any) {
+				self.__current__[key as keyof S].value = value;
+				return Reflect.set(target, key, value);
+			},
+		});
+	}
+
+	/**
+	 * Obtém o objeto de estado reativo, onde cada propriedade é uma instância de `SharedValue`.
+	 * Use isso para acessar e manipular os valores individuais da animação diretamente.
+	 *
+	 * @returns {SharedValuesState<S>} O objeto de estado com `SharedValue`s.
+	 * @example
+	 * ```ts
+	 * const stateManager = new SharedValues({ x: 0, y: 0 });
+	 *
+	 * // Acessa o SharedValue para 'x' e define um novo valor.
+	 * stateManager.current.x.value = 50;
+	 *
+	 * // Ouve por mudanças no SharedValue de 'y'.
+	 * stateManager.current.y.on('change', (newY) => {
+	 *   console.log(`Y mudou para ${newY}`);
+	 * });
+	 * ```
+	 */
+	get current(): SharedValuesState<S> {
+		return this.__current__;
 	}
 
 	/**
@@ -193,8 +243,8 @@ export class SharedValues<S> extends EventEmitter<{
 
 	/** Reseta todos os `SharedValue`s internos para seus valores iniciais. */
 	clear() {
-		for (const key in this.current) {
-			this.current[key].clear();
+		for (const key in this.__current__) {
+			this.__current__[key].clear();
 		}
 	}
 }
